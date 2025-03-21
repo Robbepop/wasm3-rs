@@ -84,7 +84,7 @@ impl<'rt> Module<'rt> {
 
     /// Links the given function to the corresponding module and function name.
     /// This allows linking a more verbose function, as it gets access to the unsafe
-    /// runtime parts. For easier use the [`make_func_wrapper`] should be used to create
+    /// runtime parts. For easier use the [`crate::make_func_wrapper`] should be used to create
     /// the unsafe facade for your function that then can be passed to this.
     ///
     /// For a simple API see [`link_closure`] which takes a closure instead.
