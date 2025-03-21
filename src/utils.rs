@@ -19,7 +19,7 @@ pub unsafe fn cstr_to_str<'a>(ptr: *const cty::c_char) -> &'a str {
 }
 
 pub fn str_to_cstr_owned(str: &str) -> Vec<cty::c_char> {
-    let mut cstr = Vec::with_capacity(str.as_bytes().len() + 1);
+    let mut cstr = Vec::with_capacity(str.len() + 1);
     cstr.extend(str.bytes().map(|c| c as cty::c_char));
     cstr.push(0 as cty::c_char);
     cstr

@@ -67,7 +67,7 @@ fn gen_bindings() {
         .arg("-Iwasm3/source");
     let status = bindgen
         .status()
-        .unwrap_or_else(|error| panic!("Unable to generate bindings: {}", error.to_string()));
+        .unwrap_or_else(|error| panic!("Unable to generate bindings: {error}"));
     if !status.success() {
         panic!("Failed to run bindgen: {:?}", status);
     }
