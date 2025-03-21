@@ -27,27 +27,27 @@ fn gen_wrapper(out_path: &Path) -> PathBuf {
 
 #[cfg(not(feature = "build-bindgen"))]
 fn gen_bindings() {
+    use std::process::Command;
     let out_path = PathBuf::from(&env::var("OUT_DIR").unwrap());
-
     let wrapper_file = gen_wrapper(&out_path);
-
-    let mut bindgen = std::process::Command::new("bindgen");
-    bindgen
-        .arg(wrapper_file)
-        .arg("--use-core")
-        .arg("--ctypes-prefix")
-        .arg("cty")
-        .arg("--no-layout-tests")
-        .arg("--default-enum-style=moduleconsts")
-        .arg("--no-doc-comments")
-        .arg("--allowlist-function")
-        .arg(WHITELIST_REGEX_FUNCTION)
-        .arg("--allowlist-type")
-        .arg(WHITELIST_REGEX_TYPE)
-        .arg("--allowlist-var")
-        .arg(WHITELIST_REGEX_VAR)
-        .arg("--no-derive-debug");
-    for &ty in PRIMITIVES.iter() {
+    let mut bindgen = Command::new("bindgen");
+    bindgen.arg(wrapper_file);
+    bindgen.args([
+        "--use-core",
+        "--ctypes-prefix",
+        "cty",
+        "--no-layout-tests",
+        "--default-enum-style=moduleconsts",
+        "--no-doc-comments",
+        "--allowlist-function",
+        WHITELIST_REGEX_FUNCTION,
+        "--allowlist-type",
+        WHITELIST_REGEX_TYPE,
+        "--allowlist-var",
+        WHITELIST_REGEX_VAR,
+        "--no-derive-debug",
+    ]);
+    for &ty in PRIMITIVES {
         bindgen.arg("--blocklist-type").arg(ty);
     }
     bindgen
@@ -57,28 +57,23 @@ fn gen_bindings() {
         .arg("--")
         .arg(format!(
             "-Dd_m3Use32BitSlots={}",
-            if cfg!(feature = "use-32bit-slots") {
-                1
-            } else {
-                0
-            }
+            cfg!(feature = "use-32bit-slots") as u8,
         ))
         .arg("-Dd_m3LogOutput=0")
         .arg("-Iwasm3/source");
-    let status = bindgen
-        .status()
-        .unwrap_or_else(|error| panic!("Unable to generate bindings: {error}"));
+    let status = match bindgen.status() {
+        Ok(status) => status,
+        Err(error) => panic!("wasm3: unable to generate bindings: {error}"),
+    };
     if !status.success() {
-        panic!("Failed to run bindgen: {:?}", status);
+        panic!("wasm3: failed to run bindgen: {:?}", status);
     }
 }
 
 #[cfg(feature = "build-bindgen")]
 fn gen_bindings() {
     let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
-
     let wrapper_file = gen_wrapper(&out_path);
-
     let mut bindgen = bindgen::builder()
         .header(wrapper_file.to_str().unwrap())
         .use_core()
@@ -98,11 +93,7 @@ fn gen_bindings() {
             [
                 &format!(
                     "-Dd_m3Use32BitSlots={}",
-                    if cfg!(feature = "use-32bit-slots") {
-                        1
-                    } else {
-                        0
-                    }
+                    cfg!(feature = "use-32bit-slots") as u8,
                 ),
                 "-Dd_m3LogOutput=0",
                 "-Iwasm3/source",
