@@ -88,22 +88,22 @@ fn gen_bindings() {
     bindgen = PRIMITIVES
         .iter()
         .fold(bindgen, |bindgen, ty| bindgen.blocklist_type(ty));
+    let bindgen = bindgen.clang_args(
+        [
+            &format!(
+                "-Dd_m3Use32BitSlots={}",
+                cfg!(feature = "use-32bit-slots") as u8,
+            ),
+            "-Dd_m3LogOutput=0",
+            "-Iwasm3/source",
+        ]
+        .iter(),
+    );
     bindgen
-        .clang_args(
-            [
-                &format!(
-                    "-Dd_m3Use32BitSlots={}",
-                    cfg!(feature = "use-32bit-slots") as u8,
-                ),
-                "-Dd_m3LogOutput=0",
-                "-Iwasm3/source",
-            ]
-            .iter(),
-        )
         .generate()
-        .expect("Failed to generate bindings")
+        .unwrap_or_else(|error| panic!("bindgen: failed to generate bindings: {error}"))
         .write_to_file(out_path.join("bindings.rs").to_str().unwrap())
-        .expect("Failed to write bindings");
+        .unwrap_or_else(|error| panic!("bindgen: failed to write bindings: {error}"));
 }
 
 fn main() {
