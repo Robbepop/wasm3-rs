@@ -1,5 +1,5 @@
-use core::{slice, str};
 use alloc::vec::Vec;
+use core::{slice, str};
 
 pub unsafe fn bytes_till_null<'a>(ptr: *const cty::c_char) -> &'a [u8] {
     if ptr.is_null() {

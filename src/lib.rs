@@ -4,8 +4,8 @@
 
 extern crate alloc;
 
-pub mod error;
 mod environment;
+pub mod error;
 mod function;
 mod macros;
 mod module;

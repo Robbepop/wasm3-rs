@@ -15,12 +15,9 @@ exclude = ["examples/*", "tests/*"]
 members = ["wasm3-sys"]
 
 [features]
-default = ["wasi", "std", "use-32bit-slots"]
-
+default = ["wasi", "use-32bit-slots"]
 wasi = ["ffi/wasi"]
-std = []
 use-32bit-slots = ["ffi/use-32bit-slots"]
-
 build-bindgen = ["ffi/build-bindgen"]
 
 [dependencies]
