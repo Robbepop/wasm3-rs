@@ -113,7 +113,7 @@ fn main() {
 
     cfg.files(
         fs::read_dir(WASM3_SOURCE)
-            .unwrap_or_else(|_| panic!("failed to read {} directory", WASM3_SOURCE))
+            .unwrap_or_else(|error| panic!("failed to read {WASM3_SOURCE} directory: {error}"))
             .filter_map(Result::ok)
             .map(|entry| entry.path())
             .filter(|p| p.extension().and_then(OsStr::to_str) == Some("c")),
