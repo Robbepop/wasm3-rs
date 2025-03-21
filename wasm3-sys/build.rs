@@ -76,6 +76,7 @@ fn gen_bindings() {
     let wrapper_file = gen_wrapper(&out_path);
     let mut bindgen = bindgen::builder()
         .header(wrapper_file.to_str().unwrap())
+        .rust_edition(bindgen::RustEdition::Edition2021)
         .use_core()
         .ctypes_prefix("cty")
         .layout_tests(false)
