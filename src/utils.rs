@@ -1,3 +1,4 @@
+use core::{slice, str};
 use alloc::vec::Vec;
 
 pub unsafe fn bytes_till_null<'a>(ptr: *const cty::c_char) -> &'a [u8] {
@@ -11,11 +12,11 @@ pub unsafe fn bytes_till_null<'a>(ptr: *const cty::c_char) -> &'a [u8] {
         ptr = ptr.add(1);
         len += 1;
     }
-    core::slice::from_raw_parts(start, len)
+    slice::from_raw_parts(start, len)
 }
 
 pub unsafe fn cstr_to_str<'a>(ptr: *const cty::c_char) -> &'a str {
-    core::str::from_utf8_unchecked(bytes_till_null(ptr))
+    str::from_utf8_unchecked(bytes_till_null(ptr))
 }
 
 pub fn str_to_cstr_owned(str: &str) -> Vec<cty::c_char> {
