@@ -1,4 +1,4 @@
-#![cfg_attr(not(feature = "std"), no_std)]
+#![no_std]
 #![warn(missing_docs)]
 //! A rust wrapper for [WASM3](https://github.com/wasm3/wasm3).
 
