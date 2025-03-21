@@ -11,7 +11,6 @@ pub use self::environment::Environment;
 mod function;
 pub use self::function::{CallContext, Function, RawCall};
 mod macros;
-pub use self::macros::*;
 mod module;
 pub use self::module::{Module, ParsedModule};
 mod runtime;
