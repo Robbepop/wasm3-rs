@@ -143,11 +143,10 @@ fn main() {
 
     cfg.define(
         "d_m3Use32BitSlots",
-        if cfg!(feature = "use-32bit-slots") {
-            Some("1")
-        } else {
-            Some("0")
-        },
+        match cfg!(feature = "use-32bit-slots") {
+            true => Some("1"),
+            false => Some("0"),
+        }
     );
     cfg.compile("wasm3");
 }
